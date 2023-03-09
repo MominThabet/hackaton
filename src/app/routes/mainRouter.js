@@ -2,6 +2,6 @@ const express = require('express');
 
 const router = express.Router();
 
-// router.use('/user', require('./v1/user/index'));
+ router.use('/post', require('./v1/post/index'));
 
 module.exports = router;
