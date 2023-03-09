@@ -6,7 +6,7 @@ const {
 } = require("../../../utils/responses/error/errors");
 module.exports.getAllPost = async (req, res, next) => {
   try {
-    const { message, data, code } = await postController.getAllPost();
+    const { message, data, code } = await postController.getAllPost(req);
 
     if (code === 0) {
         return res.status(200).json({
@@ -46,15 +46,20 @@ module.exports.addPost = async (req, res, next) => {
 
 module.exports.editPost = async (req, res, next) => {
   try {
-    const { message, data, code } = await userController.editPost({
+    const { message, data, code } = await postController.editPost({
       ...req.body , ...req.params
     });
 
     if (code === 0) {
-      return next(new Success(message, data));
-    }
+        return res.status(200).json({
+          data
+        })
+      }
+  
+      return res.status(500).json({
+          error : "error"
+      });
 
-    return next(new BadRequest(message));
   } catch (err) {
     console.log(err);
     return next(new InternalServerError(req));
@@ -77,3 +82,27 @@ module.exports.deletePost = async (req, res, next) => {
     return next(new InternalServerError(req));
   }
 };
+
+
+module.exports.sharePost = async (req, res, next) => {
+    try {
+        console.log(req.params)
+        const { message, data, code } = await postController.sharePost({
+            ...req.body , ...req.params , 
+        });
+  
+      if (code === 0) {
+          return res.status(200).json({
+            data
+          })
+        }
+    
+        return res.status(500).json({
+            error : "error"
+        });
+    } catch (err) {
+      console.log(err);
+      return next(new InternalServerError(req));
+    }
+  };
+

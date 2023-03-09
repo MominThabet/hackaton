@@ -1,9 +1,10 @@
 const Post = require("../../models/post");
+const SharedPost = require("../../models/sharedPost");
 const bcrypt = require("bcrypt");
 
 module.exports.getAllPost = async (data) => {
   try {
-    let post = await Post.find({ userId: "6408bbfd42e9ef20a539c0df" });
+    let post = await Post.find({ userId: req.user._id });
     if (!post) {
       return { code: 1, message: "We dont have Post", data: null };
     }
@@ -15,10 +16,10 @@ module.exports.getAllPost = async (data) => {
 };
 
 module.exports.addPost = async (data) => {
-  const { userId, description, image } = data;
+  const { description, image } = data;
   try {
     const post = await Post.create({
-      userId,
+      userId : req.user._id,
       description,
       image,
     });
@@ -30,6 +31,7 @@ module.exports.addPost = async (data) => {
 };
 
 module.exports.editPost = async (data) => {
+  console.log('dsadas')
   const { postId, userId, description } = data;
   try {
     const post = await Post.findOne({
@@ -77,23 +79,19 @@ module.exports.deletePost = async (data) => {
 };
 
 module.exports.sharePost = async (data) => {
-  const { postId, email, action } = data;
+  const { receiverEmail, postId, action } = data;
   try {
-    const post = await Post.findOne({
-      userId,
-      description,
+    const sharedPost = await SharedPost.create({
+      receiverEmail,
+      postId,
+      action
     });
 
-    if (!post) {
-      return { code: 1, message: "user.notFoundUser", data: null };
+    if (!sharedPost) {
+      return { code: 1, message: "post.notFoundUser", data: null };
     }
 
-    post.deleteOne({
-      userId,
-      description,
-    });
-
-    return { code: 0, message: "commonSuccess.message", data: user };
+    return { code: 0, message: "commonSuccess.message", data: sharedPost };
   } catch (error) {
     console.log(error);
     throw new Error(error);

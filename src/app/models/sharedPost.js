@@ -8,7 +8,7 @@ const sharedPostSchema = new mongoose.Schema({
   postId:{
       type: mongoose.Schema.ObjectId
   },    
-  Action:{
+  action:{
       type: String,
       enum:["Viewed only" , "Viewed only and edit"],
       required: true,

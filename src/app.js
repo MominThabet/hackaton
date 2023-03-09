@@ -18,7 +18,6 @@ app.get('/', (req, res, next) => {
   next(new Created('hi', 'again'));
 });
 
-app.use('/api/v1', require('./app/routes/mainRouter'));
 
 app.use((service, req, res, next) => {
   if (service instanceof Error) {
