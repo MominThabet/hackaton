@@ -13,8 +13,9 @@ app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+
 app.get('/', (req, res, next) => {
-  next(new Created('hi', 'blue'));
+  next(new Created('hi', 'again'));
 });
 
 app.use('/api/v1', require('./app/routes/mainRouter'));
