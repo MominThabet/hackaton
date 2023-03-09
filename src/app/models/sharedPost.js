@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 
 const sharedPostSchema = new mongoose.Schema({
-  sender: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'users',
-    required: true,
-  },
   receiverEmail: {
     type: String,
     required: true,
