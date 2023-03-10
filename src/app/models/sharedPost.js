@@ -5,6 +5,7 @@ const sharedPostSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+<<<<<<< HEAD
   postId: {
     type: mongoose.Schema.ObjectId,
   },
@@ -14,5 +15,16 @@ const sharedPostSchema = new mongoose.Schema({
     required: true,
   },
 });
+=======
+  postId:{
+      type: mongoose.Schema.ObjectId
+  },    
+  action:{
+      type: String,
+      enum:["Viewed only" , "Viewed only and edit"],
+      required: true,
+  }
+  });
+>>>>>>> origin/Post
 const sharedPost = mongoose.model('sharedPost', sharedPostSchema);
 module.exports = sharedPost;
