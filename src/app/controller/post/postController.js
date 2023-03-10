@@ -1,17 +1,10 @@
-<<<<<<< HEAD
 const Post = require('../../models/post');
-const sharedPost = require('../../models/sharedPost');
+const SharedPost = require('../../models/sharedPost');
 const bcrypt = require('bcrypt');
-=======
-const Post = require("../../models/post");
-const SharedPost = require("../../models/sharedPost");
-const bcrypt = require("bcrypt");
-const S3 = require("../../../utils/AWS/S3");
->>>>>>> origin/Post
+const S3 = require('../../../utils/AWS/S3');
 
 module.exports.getAllPost = async (req) => {
   try {
-<<<<<<< HEAD
     const { _id: userId, email: userEmail } = data;
     let posts = await Post.find({
       userId: userId,
@@ -25,11 +18,6 @@ module.exports.getAllPost = async (req) => {
 
     if (!viewPosts) {
       return { code: 1, message: "you don't have any Posts", data: null };
-=======
-    let post = await Post.find({ userId: req.user._id });
-    if (!post) {
-      return { code: 1, message: "We dont have Post", data: null };
->>>>>>> origin/Post
     }
 
     return { code: 0, message: 'commonSuccess message', data: viewPosts };
@@ -40,13 +28,8 @@ module.exports.getAllPost = async (req) => {
 };
 
 module.exports.addPost = async (data) => {
-<<<<<<< HEAD
-  const { description, userId } = data;
-
-=======
   const { description, req } = data;
   const userId = req.user._id;
->>>>>>> origin/Post
   try {
     let repeatedPost = await Post.findOne({
       userId,
@@ -55,7 +38,7 @@ module.exports.addPost = async (data) => {
     if (repeatedPost) {
       return {
         code: 2,
-        message: "Post is repeated in the same user change the content Ahmad ",
+        message: 'Post is repeated in the same user change the content Ahmad ',
         data: null,
       };
     }
@@ -63,32 +46,26 @@ module.exports.addPost = async (data) => {
       userId,
       description,
     });
-<<<<<<< HEAD
-    return { code: 0, message: 'commonSuccess.message', data: { post } };
-  } catch (error) {
-    console.log(error, 'dsadsada');
-=======
 
     if (req.file) {
       const imageName = req.file.originalname;
       let image = await S3.upload({
-        Bucket: "image-nodejs", // bucket name in aws
+        Bucket: 'image-nodejs', // bucket name in aws
         Key: imageName, // name file
         Body: req.file.buffer,
-        signatureVersion: "v4",
+        signatureVersion: 'v4',
       }).promise();
 
       if (!image) {
-        return { code: 2, message: "failed file upload", data: null };
+        return { code: 2, message: 'failed file upload', data: null };
       }
       post.image = image.Location;
       await post.save();
     }
 
-    return { code: 0, message: "commonSuccess.message", data: { post } };
+    return { code: 0, message: 'commonSuccess.message', data: { post } };
   } catch (error) {
     console.log(error);
->>>>>>> origin/Post
     throw new Error(error);
   }
 };
@@ -107,11 +84,7 @@ module.exports.editPost = async (data) => {
     if (userId == post.userId) {
       post.description = description;
       await post.save();
-<<<<<<< HEAD
-      return { code: 0, message: 'commonSuccess message', data: user };
-=======
       return { code: 0, message: 'commonSuccess.message', data: user };
->>>>>>> origin/Post
     }
 
     return { code: 1, message: 'permission denied', data: null };
@@ -153,24 +126,11 @@ module.exports.sharePost = async (data) => {
       action,
     });
 
-<<<<<<< HEAD
-    if (!post) {
-      return { code: 1, message: 'user.notFoundUser', data: null };
-    }
-
-    post.deleteOne({
-      userId,
-      description,
-    });
-
-    return { code: 0, message: 'commonSuccess.message', data: user };
-=======
     if (!sharedPost) {
-      return { code: 1, message: "post.notFoundUser", data: null };
+      return { code: 1, message: 'post.notFoundUser', data: null };
     }
 
-    return { code: 0, message: "commonSuccess.message", data: sharedPost };
->>>>>>> origin/Post
+    return { code: 0, message: 'commonSuccess.message', data: sharedPost };
   } catch (error) {
     console.log(error);
     throw new Error(error);
