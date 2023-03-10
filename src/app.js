@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const compression = require('compression');
-const bodyParser = require('body-parser');
 const { handleSuccess } = require('../src/utils/responses/success');
 const { handleError } = require('../src/utils/responses/error');
 
@@ -17,9 +16,7 @@ app.use(cors());
 app.get('/', (req, res, next) => {
   next(new Created('hi', 'again'));
 });
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use('/api/v1', require('./app/routes/mainRouter'));
 
 app.use((service, req, res, next) => {
   if (service instanceof Error) {
