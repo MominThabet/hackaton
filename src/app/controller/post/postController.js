@@ -3,14 +3,19 @@ const SharedPost = require('../../models/sharedPost');
 const bcrypt = require('bcrypt');
 const S3 = require('../../../utils/AWS/S3');
 
-module.exports.getAllPost = async (req) => {
+module.exports.getAllPost = async (user, data) => {
   try {
-    const { _id: userId, email: userEmail } = data;
+    const { _id: userId, email: userEmail } = user;
+    let { page, limit } = data;
+    page = parseInt(page);
+    limit = parseInt(limit);
+    console.log(page, limit);
+    console.log(userId, userEmail);
     let posts = await Post.find({
       userId: userId,
     });
 
-    let sharedPosts = await sharedPost.find({
+    let sharedPosts = await SharedPost.find({
       receiverEmail: userEmail,
     });
 
@@ -19,8 +24,12 @@ module.exports.getAllPost = async (req) => {
     if (!viewPosts) {
       return { code: 1, message: "you don't have any Posts", data: null };
     }
-
-    return { code: 0, message: 'commonSuccess message', data: viewPosts };
+    let start = page * limit;
+    return {
+      code: 0,
+      message: 'commonSuccess message',
+      data: viewPosts.slice(start, start + limit),
+    };
   } catch (error) {
     console.log(error);
     throw new Error(error);

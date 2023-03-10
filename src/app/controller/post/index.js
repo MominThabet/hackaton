@@ -7,18 +7,20 @@ const {
 module.exports.getAllPost = async (req, res, next) => {
   try {
     const user = req.user;
-    const { message, data, code } = await postController.getAllPost(user);
-
+    const { message, code, data } = await postController.getAllPost(user, {
+      ...req.body,
+    });
+    if (!data) {
+      data = 'no posts';
+    }
     if (code === 0) {
-      // return next(new Ok(message, data ));
-      return res.status(200).json({
-        data,
-      });
+      return next(new Ok(message, { data }));
+      // return res.status(200).json({
+      //   data,
+      // });
     }
 
-    return res.status(500).json({
-      error: message,
-    });
+    return next(new BadRequest(message, data));
   } catch (err) {
     // console.log(err);
     return next(new InternalServerError(req));

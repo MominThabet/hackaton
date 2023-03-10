@@ -52,7 +52,7 @@ module.exports.handleError = (error, req, res) => {
       status: 'failed',
       statusCode,
       key,
-      message: req.t(resMessage),
+      message: resMessage,
       data,
     });
   }
@@ -60,7 +60,7 @@ module.exports.handleError = (error, req, res) => {
   return res.status(statusCode).json({
     status: 'failed',
     statusCode,
-    message: req.t(message),
+    message: message,
     data,
   });
 };
