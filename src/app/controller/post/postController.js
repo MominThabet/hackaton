@@ -1,13 +1,25 @@
 const Post = require('../../models/post');
+const sharedPost = require('../../models/sharedPost');
 const bcrypt = require('bcrypt');
 
 module.exports.getAllPost = async (data) => {
   try {
-    let post = await Post.find({ userId: '6408bbfd42e9ef20a539c0df' });
-    if (!post) {
-      return { code: 1, message: 'We dont have Post', data: null };
+    const { _id: userId, email: userEmail } = data;
+    let posts = await Post.find({
+      userId: userId,
+    });
+
+    let sharedPosts = await sharedPost.find({
+      receiverEmail: userEmail,
+    });
+
+    const viewPosts = posts.concat(sharedPosts);
+
+    if (!viewPosts) {
+      return { code: 1, message: "you don't have any Posts", data: null };
     }
-    return { code: 0, message: 'commonSuccess.message', data: { post } };
+
+    return { code: 0, message: 'commonSuccess message', data: viewPosts };
   } catch (error) {
     console.log(error);
     throw new Error(error);
@@ -43,7 +55,7 @@ module.exports.editPost = async (data) => {
     if (userId == post.userId) {
       post.description = description;
       await post.save();
-      return { code: 0, message: 'commonSuccess.message', data: user };
+      return { code: 0, message: 'commonSuccess message', data: user };
     }
 
     return { code: 1, message: 'permission denied', data: null };

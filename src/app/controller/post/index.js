@@ -1,14 +1,16 @@
 const postController = require('./postController.js');
-const { Ok } = require('../../../utils/responses/success/successes');
+const { Created, Ok } = require('../../../utils/responses/success/successes');
 const {
   InternalServerError,
   BadRequest,
 } = require('../../../utils/responses/error/errors');
 module.exports.getAllPost = async (req, res, next) => {
   try {
-    const { message, data, code } = await postController.getAllPost();
+    const user = req.user;
+    const { message, data, code } = await postController.getAllPost(user);
 
     if (code === 0) {
+      // return next(new Ok(message, data ));
       return res.status(200).json({
         data,
       });
@@ -18,7 +20,7 @@ module.exports.getAllPost = async (req, res, next) => {
       error: 'error',
     });
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     return next(new InternalServerError(req));
   }
 };

@@ -11,7 +11,7 @@ module.exports.handleSuccess = (success, req, res) => {
   return res.status(statusCode).json({
     statusCode,
     status: 'success',
-    message: message,
-    data: data,
+    message,
+    data,
   });
 };
